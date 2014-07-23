@@ -9,16 +9,13 @@ def prediction_error(predict,test):
     return np.array([abs(diff) for diff in predict-test])    
 
 import load_data
-train = load_data.loader('train_processed').read()
-test_size=886
+loader = load_data.train_loader('train_processed')
 #train set
-X= train[0:-test_size,0:9]
-y_c=train[0:-test_size,9]
-y_r=train[0:-test_size,10]
+(X,y_c)= loader.training_data(range(9),9)
+(X,y_r)= loader.training_data(range(9),10)
 #test set
-test_X= train[-test_size:,0:9]
-test_y_c=train[-test_size:,9]
-test_y_r=train[-test_size:,10]
+(test_X,test_y_c)= loader.test_data(range(9),9)
+(test_X,test_y_c)= loader.test_data(range(9),10)
 
 from sklearn.linear_model import LinearRegression
 linreg=LinearRegression(fit_intercept=True, normalize=True)
@@ -31,11 +28,9 @@ error_y_c=prediction_error(predict_y_c,test_y_c)
 print "Max Value: {}, Average error: {}".format (test_y_c.max(),error_y_c.mean())
 
 
-import matplotlib.pyplot as plot
-plot.title("Cost vs. number of iterations")
-plot.plot(test_X[:,0],predict_y_c,'b')
-plot.plot(test_X[:,0],test_y_c,'g')
-plot.plot(test_X[:,0],error_y_c,'r')
-
-plot.figure()
-plot.title("Linear Regression")
+import matplotlib.pyplot as plt
+plt.figure()
+plt.title("Linear Regression")
+plt.plot(test_X[:,0],predict_y_c,'b')
+plt.plot(test_X[:,0],test_y_c,'g')
+plt.plot(test_X[:,0],error_y_c,'r')
