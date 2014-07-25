@@ -8,22 +8,23 @@ Created on Wed Jul 23 20:39:10 2014
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn import linear_model, decomposition, datasets
+from sklearn import linear_model, decomposition
 from sklearn.pipeline import Pipeline
 from sklearn.grid_search import GridSearchCV
+import load_data
 
 logistic = linear_model.LogisticRegression()
 
 pca = decomposition.PCA()
 pipe = Pipeline(steps=[('pca', pca), ('logistic', logistic)])
 
-digits = datasets.load_digits()
-X_digits = digits.data
-y_digits = digits.target
+#read data from csv
+loader = load_data.train_loader('train_processed')
+(X,y)=loader.training_data(range(9),9)
 
 ###############################################################################
 # Plot the PCA spectrum
-pca.fit(X_digits)
+pca.fit(X)
 
 plt.figure(1, figsize=(4, 3))
 plt.clf()
@@ -44,7 +45,7 @@ Cs = np.logspace(-4, 4, 3)
 estimator = GridSearchCV(pipe,
                          dict(pca__n_components=n_components,
                               logistic__C=Cs))
-estimator.fit(X_digits, y_digits)
+estimator.fit(X, y)
 
 plt.axvline(estimator.best_estimator_.named_steps['pca'].n_components,
             linestyle=':', label='n_components chosen')

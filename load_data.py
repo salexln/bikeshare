@@ -5,33 +5,43 @@ Created on Tue Jul 22 20:04:07 2014
 @author: Goren
 """
 import csv
+import os
 import numpy as np
+import random
 
 class train_loader:
     """Loads data """
     TestcasesRatio=0.1
     
-    def __init__(self,csv):
-        #hard coded magic
-        self.csv='D:\\code\\python\\bikeshare\\data\\{}.csv'.format(csv)
-        self.read()
-
-    def read(self):
-        """ Reads csv into a numpy structure"""
+    def __init__(self,csv_name,shuffle=False):
+        """Load the data from the csv file"""
+        csv_file=os.getcwd()+'\\data\\{}.csv'.format(csv_name)
         #read csv
-        infile=open(self.csv,"rb")
+        infile=open(csv_file,"rb")
         reader=csv.reader(infile,delimiter=',')
         next(reader, None)#skip the headers
         x=list(reader)
+        if (shuffle):
+            random.shuffle(x)
         self.data=np.array(x).astype('float')
         
     def training_data(self,data_cols,target_col):
+        """
+            returns a partial list of (1-TestcasesRatio) percent of the data
+            for training purposes
+            and splits the input data into data and target
+        """
         test_size=int(round(self.data.shape[0]*self.TestcasesRatio))
         X= self.data[0:-test_size,data_cols]
         y=self.data[0:-test_size,target_col]
         return (X,y)
         
     def test_data(self,data_cols,target_col):
+        """
+            returns a partial list of TestcasesRatio percent of the data
+            for the test set
+            and splits the input data into data and target
+        """
         test_size=int(round(self.data.shape[0]*self.TestcasesRatio))
         X= self.data[-test_size:,data_cols]
         y=self.data[-test_size:,target_col]
