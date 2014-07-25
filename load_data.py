@@ -25,6 +25,16 @@ class train_loader:
             random.shuffle(x)
         self.data=np.array(x).astype('float')
         
+    def scale(self,cols):
+        """
+        Scales the columns such that:
+        1 = maximal value of each column
+        0 = minimal value of each column
+        """
+        for col in cols:
+            col_min=self.data[:,col].min()
+            col_max=self.data[:,col].max()
+            self.data[:,col]=(self.data[:,col]-col_min)/(col_max-col_min)
     def training_data(self,data_cols,target_col):
         """
             returns a partial list of (1-TestcasesRatio) percent of the data
@@ -50,6 +60,7 @@ class train_loader:
 #for tests
 if __name__=='__main__':
     loader=train_loader('train_processed')
+    loader.scale([5])
     (X,y)=loader.training_data(range(9),9)
-    print X
+    print X[:,5].max()
     #print train[:,[6,11]]
