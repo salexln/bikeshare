@@ -9,7 +9,8 @@ def prediction_error(predict,test):
     return np.array([abs(diff) for diff in predict-test])    
 
 import load_data
-loader = load_data.train_loader('train_processed')
+loader = load_data.bikeshare_loader()
+loader.preprocess()
 #train set
 (X,y_c)= loader.training_data(range(9),9)
 (X,y_r)= loader.training_data(range(9),10)

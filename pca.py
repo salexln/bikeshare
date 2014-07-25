@@ -17,7 +17,7 @@ logistic = linear_model.LogisticRegression()
 
 #read data from csv
 loader = load_data.train_loader('train_processed')
-(X,y)=loader.training_data(range(9),9)
+(X,y)=loader.training_data(range(1,9),9)
 
 loader.scale(range(9))
 ###############################################################################
